@@ -6,6 +6,7 @@ import AllPets from './components/AllPets';
 import OnePet from './components/OnePet';
 import NewPet from './components/NewPet';
 import EditPet from './components/EditPet';
+import RegisterForm from './components/RegisterForm';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <main className="container py-3">
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/register" element={<RegisterForm />} />
           <Route path="/login" element={<LoginForm />} />
           <Route path="/pets" element={<AllPets />} />
           <Route path="/pets/:id" element={<OnePet />} />

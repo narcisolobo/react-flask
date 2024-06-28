@@ -39,7 +39,7 @@ def register():
             jsonify({"msg": "Email already exists. Please log in."})
         )
         response.headers["Content-Type"] = "application/json"
-        return response, 400
+        return response, 409
 
     pw_hash = bcrypt.generate_password_hash(data["password"])
     user_data = {
@@ -71,12 +71,12 @@ def login():
     if user == None:
         response = make_response(jsonify({"msg": "Invalid credentials."}))
         response.headers["Content-Type"] = "application/json"
-        return response, 400
+        return response, 401
 
     if not bcrypt.check_password_hash(user["password"], data["password"]):
         response = make_response(jsonify({"msg": "Invalid credentials."}))
         response.headers["Content-Type"] = "application/json"
-        return response, 400
+        return response, 401
 
     access_token = create_access_token(identity=data["email"])
     response = make_response(jsonify({"access_token": access_token}))
