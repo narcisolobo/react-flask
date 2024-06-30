@@ -2,7 +2,7 @@ import axios from 'axios';
 
 const api = axios.create({ baseURL: '/api' });
 
-async function register(registerData) {
+async function registerService(registerData) {
   try {
     const response = await api.post('/auth/register', registerData);
     return response.data;
@@ -11,7 +11,7 @@ async function register(registerData) {
   }
 }
 
-async function login(loginData) {
+async function loginService(loginData) {
   try {
     const response = await api.post('/auth/login', loginData);
     return response.data;
@@ -20,4 +20,4 @@ async function login(loginData) {
   }
 }
 
-export { register, login };
+export { registerService, loginService };

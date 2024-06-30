@@ -1,6 +1,11 @@
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from '../context/AuthProvider';
+import LoggedInNavbar from './LoggedInNavbar';
+import LoggedOutNavbar from './LoggedOutNavbar';
 
 function Navbar() {
+  const { isAuthenticated } = useContext(AuthContext);
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container">
@@ -18,18 +23,7 @@ function Navbar() {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav ms-auto">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/pets" end>
-                All Pets
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/pets/new" end>
-                Add Pet
-              </NavLink>
-            </li>
-          </ul>
+          {isAuthenticated ? <LoggedInNavbar /> : <LoggedOutNavbar />}
         </div>
       </div>
     </nav>

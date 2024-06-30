@@ -1,10 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { login } from '../services/auth-service';
+import { loginService } from '../services/auth-service';
 import Alert from './Alert';
+import { AuthContext } from '../context/AuthProvider';
 
 function LoginForm() {
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
   const [searchParams, setSearchParams] = useSearchParams();
   const [alert, setAlert] = useState({
     color: '',
@@ -39,6 +41,9 @@ function LoginForm() {
       case 'invalid-credentials':
         setAlert({ color: 'warning', message: 'Invalid credentials.' });
         break;
+      case 'logout-successful':
+        setAlert({ color: 'info', message: 'Successfully logged out.' });
+        break;
       default:
         setAlert({ color: '', message: '' });
         break;
@@ -54,8 +59,11 @@ function LoginForm() {
     e.preventDefault();
     setAlert({ color: '', message: '' });
     setSearchParams('');
-    login(form)
-      .then(() => navigate('/pets'))
+    loginService(form)
+      .then((data) => {
+        login(data.access_token);
+        navigate('/pets');
+      })
       .catch((err) => {
         if (err.response && err.response.status === 401) {
           setSearchParams({ message: 'invalid-credentials' });

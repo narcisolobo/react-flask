@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { register } from '../services/auth-service';
+import { registerService } from '../services/auth-service';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Alert from './Alert';
 
@@ -48,7 +48,7 @@ function RegisterForm() {
     e.preventDefault();
     setAlert({ color: '', message: '' });
     setSearchParams('');
-    register(form)
+    registerService(form)
       .then(() => navigate('/login?message=successful'))
       .catch((err) => {
         if (err.response && err.response.status === 409) {
