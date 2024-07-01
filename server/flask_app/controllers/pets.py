@@ -1,4 +1,5 @@
 from flask_app.models.pet import Pet
+from flask_app.utils.responses import make_json_response
 from flask_jwt_extended import jwt_required
 from flask import Blueprint, jsonify, make_response, request
 
@@ -6,16 +7,13 @@ from flask import Blueprint, jsonify, make_response, request
 pets = Blueprint("pets", __name__)
 
 
-@pets.route("/api/pets")
+@pets.get("/api/pets")
 @jwt_required()
 def all_pets():
     """This route returns all pets."""
 
     pets = Pet.find_all()
-    response = make_response(jsonify(pets))
-    response.headers["Content-Type"] = "application/json"
-    response.status_code = 200
-    return response
+    return make_json_response(pets, 200)
 
 
 @pets.post("/api/pets/create")
@@ -26,17 +24,11 @@ def create_pet():
     data = request.get_json()
     errors = Pet.validate_pet(data)
 
-    if len(errors) != 0:
-        response = make_response(jsonify(errors))
-        response.headers["Content-Type"] = "application/json"
-        response.status_code = 400
-        return response
+    if errors:
+        return make_json_response(errors, 400)
 
     Pet.create(data)
-    response = make_response(jsonify({"msg": "pet created"}))
-    response.headers["Content-Type"] = "application/json"
-    response.status_code = 201
-    return response
+    return make_json_response({"msg": "pet created"}, 201)
 
 
 @pets.get("/api/pets/<int:pet_id>")
@@ -45,36 +37,29 @@ def pet_details(pet_id):
     """This route returns one pet."""
 
     pet = Pet.find_by_id(pet_id)
-    if pet == None:
-        response = make_response(jsonify({"msg": "pet not found"}))
-        response.headers["Content-Type"] = "application/json"
-        response.status_code = 404
-        return response
+    if pet is None:
+        return make_json_response({"msg": "pet not found"}, 404)
 
-    response = make_response(jsonify(pet))
-    response.headers["Content-Type"] = "application/json"
-    response.status_code = 200
-    return response
+    return make_json_response(pet, 200)
 
 
-@pets.post("/api/pets/<int:pet_id>/update")
+@pets.patch("/api/pets/<int:pet_id>/update")
 @jwt_required()
 def update_pet(pet_id):
     """This route updates a pet."""
 
+    pet = Pet.find_by_id(pet_id)
+    if pet is None:
+        return make_json_response({"msg": "pet not found"}, 404)
+
     data = request.get_json()
     errors = Pet.validate_pet(data)
-    if len(errors) != 0:
-        response = make_response(jsonify(errors))
-        response.headers["Content-Type"] = "application/json"
-        response.status_code = 400
-        return response
+
+    if errors:
+        return make_json_response(errors, 400)
 
     Pet.update(pet_id, data)
-    response = make_response(jsonify({"msg": "pet updated"}))
-    response.headers["Content-Type"] = "application/json"
-    response.status_code = 200
-    return response
+    return make_json_response({"msg": "pet updated"}, 200)
 
 
 @pets.post("/api/pets/<int:pet_id>/delete")
@@ -83,14 +68,8 @@ def delete_pet(pet_id):
     """This route deletes a pet."""
 
     pet = Pet.find_by_id(pet_id)
-    if pet == None:
-        response = make_response(jsonify({"msg": "pet not found"}))
-        response.headers["Content-Type"] = "application/json"
-        response.status_code = 404
-        return response
+    if pet is None:
+        return make_json_response({"msg": "pet not found"}, 404)
 
     Pet.delete_by_id(pet_id)
-    response = make_response(jsonify({"msg": "pet deleted"}))
-    response.headers["Content-Type"] = "application/json"
-    response.status_code = 200
-    return response
+    return make_json_response({"msg": "pet deleted"}, 200)

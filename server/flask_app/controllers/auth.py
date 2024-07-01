@@ -2,23 +2,21 @@ from flask import Blueprint, jsonify, make_response, request
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt
 from flask_app.models.user import User
 from flask_app.extensions import jwt
-from flask_app import bcrypt
+from flask_app.utils.responses import make_json_response
 
 auth = Blueprint("auth", __name__)
 
 
 @jwt.token_in_blocklist_loader
 def check_if_token_in_blocklist(jwt_header, jwt_payload):
-    jti = jwt_payload["jti"]
-    return User.is_blocked(jti)
+    return User.is_blocked(jwt_payload["jti"])
 
 
 @jwt.revoked_token_loader
 def revoked_token_callback(jwt_header, jwt_payload):
-    error = {"msg": "The token has been revoked.", "error": "token revoked"}
-    response = make_response(jsonify(error))
-    response.headers["Content-Type"] = "application/json"
-    return response, 401
+    return make_json_response(
+        {"msg": "The token has been revoked.", "error": "token revoked"}, 401
+    )
 
 
 @auth.post("/api/auth/register")
@@ -28,20 +26,13 @@ def register():
     data = request.get_json()
     errors = User.validate_register(data)
 
-    if len(errors) != 0:
-        response = make_response(jsonify(errors))
-        response.headers["Content-Type"] = "application/json"
-        return response, 400
+    if errors:
+        return make_json_response(errors, 400)
 
-    user = User.find_by_email(data["email"])
-    if user != None:
-        response = make_response(
-            jsonify({"msg": "Email already exists. Please log in."})
-        )
-        response.headers["Content-Type"] = "application/json"
-        return response, 409
+    if User.find_by_email(data["email"]) is not None:
+        return make_json_response({"msg": "Email already exists. Please log in."}, 409)
 
-    pw_hash = bcrypt.generate_password_hash(data["password"])
+    pw_hash = User.generate_hash(data["password"])
     user_data = {
         "first_name": data["first_name"],
         "last_name": data["last_name"],
@@ -50,9 +41,7 @@ def register():
     }
     User.create(user_data)
 
-    response = make_response(jsonify({"msg": "User registered."}))
-    response.headers["Content-Type"] = "application/json"
-    return response, 201
+    return make_json_response({"msg": "User registered."}, 201)
 
 
 @auth.post("/api/auth/login")
@@ -62,34 +51,19 @@ def login():
     data = request.get_json()
     errors = User.validate_login(data)
 
-    if len(errors) != 0:
-        response = make_response(jsonify(errors))
-        response.headers["Content-Type"] = "application/json"
-        return response, 400
+    if errors:
+        return make_json_response(errors, 400)
 
     user = User.find_by_email(data["email"])
-    if user == None:
-        response = make_response(jsonify({"msg": "Invalid credentials."}))
-        response.headers["Content-Type"] = "application/json"
-        return response, 401
-
-    if not bcrypt.check_password_hash(user["password"], data["password"]):
-        response = make_response(jsonify({"msg": "Invalid credentials."}))
-        response.headers["Content-Type"] = "application/json"
-        return response, 401
+    if user is None or not User.check_hash(user["password"], data["password"]):
+        return make_json_response({"msg": "Invalid credentials."}, 401)
 
     access_token = create_access_token(identity=data["email"])
-    response = make_response(jsonify({"access_token": access_token}))
-    response.headers["Content-Type"] = "application/json"
-    return response, 200
+    return make_json_response({"access_token": access_token}, 200)
 
 
 @auth.get("/api/auth/logout")
 @jwt_required()
 def logout():
-    jwt_dict = get_jwt()
-    jti = jwt_dict["jti"]
-    User.add_to_blocklist(jti)
-    response = make_response(jsonify({"msg": "Successfully logged out"}))
-    response.headers["Content-Type"] = "application/json"
-    return response, 200
+    User.add_to_blocklist(get_jwt()["jti"])
+    return make_json_response({"msg": "Successfully logged out"}, 200)

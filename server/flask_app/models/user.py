@@ -1,5 +1,6 @@
-from flask_app.config.mysqlconnection import connectToMySQL
 from re import compile
+from flask_app import bcrypt
+from flask_app.config.mysqlconnection import connectToMySQL
 
 EMAIL_REGEX = compile(r"^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$")
 
@@ -55,6 +56,17 @@ class User:
             errors["password"] = "Password must be at least eight characters."
 
         return errors
+
+    @staticmethod
+    def generate_hash(password):
+        """Generates a hashed password."""
+        return bcrypt.generate_password_hash(password)
+
+    @staticmethod
+    def check_hash(hashed_password, entered_password):
+        """Checks an entered password against the hashed password."""
+
+        return bcrypt.check_password_hash(hashed_password, entered_password)
 
     @classmethod
     def create(cls, data):

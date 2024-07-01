@@ -47,7 +47,7 @@ async function createPet(petData) {
 
 async function editPet(petId, petData) {
   try {
-    const response = await api.post(`/pets/${petId}/update`, petData);
+    const response = await api.patch(`/pets/${petId}/update`, petData);
     console.log(response.data);
     return response.data;
   } catch (error) {

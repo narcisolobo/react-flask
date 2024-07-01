@@ -2,8 +2,8 @@
 <html lang="en">
   <head>
     <title>
-      AttributeError: &#39;dict&#39; object has no attribute &#39;password&#39;
-      // Werkzeug Debugger
+      TypeError: &#39;NoneType&#39; object is not subscriptable // Werkzeug
+      Debugger
     </title>
     <link
       rel="stylesheet"
@@ -16,17 +16,16 @@
       var CONSOLE_MODE = false,
         EVALEX = true,
         EVALEX_TRUSTED = false,
-        SECRET = 'xraM8h5piFBKluKBbjdp';
+        SECRET = 'YQlmBxEd1h6Usnv8sDl2';
     </script>
   </head>
 
   <body style="background-color: #fff">
     <div class="debugger">
-      <h1>AttributeError</h1>
+      <h1>TypeError</h1>
       <div class="detail">
         <p class="errormsg">
-          AttributeError: &#39;dict&#39; object has no attribute
-          &#39;password&#39;
+          TypeError: &#39;NoneType&#39; object is not subscriptable
         </p>
       </div>
       <h2 class="traceback">Traceback <em>(most recent call last)</em></h2>
@@ -34,7 +33,7 @@
         <h3></h3>
         <ul>
           <li>
-            <div class="frame" id="frame-4393045152">
+            <div class="frame" id="frame-4384809616">
               <h4>
                 File
                 <cite class="filename"
@@ -61,7 +60,7 @@
           </li>
 
           <li>
-            <div class="frame" id="frame-4393046016">
+            <div class="frame" id="frame-4384808464">
               <h4>
                 File
                 <cite class="filename"
@@ -98,7 +97,7 @@
           </li>
 
           <li>
-            <div class="frame" id="frame-4393042992">
+            <div class="frame" id="frame-4384808320">
               <h4>
                 File
                 <cite class="filename"
@@ -135,7 +134,7 @@
           </li>
 
           <li>
-            <div class="frame" id="frame-4393045440">
+            <div class="frame" id="frame-4384809184">
               <h4>
                 File
                 <cite class="filename"
@@ -171,7 +170,7 @@
           </li>
 
           <li>
-            <div class="frame" id="frame-4393046448">
+            <div class="frame" id="frame-4384809040">
               <h4>
                 File
                 <cite class="filename"
@@ -206,7 +205,7 @@
           </li>
 
           <li>
-            <div class="frame" id="frame-4393046592">
+            <div class="frame" id="frame-4384808032">
               <h4>
                 File
                 <cite class="filename"
@@ -242,44 +241,69 @@
           </li>
 
           <li>
-            <div class="frame" id="frame-4393046736">
+            <div class="frame" id="frame-4384809472">
+              <h4>
+                File
+                <cite class="filename"
+                  >"/Users/instructornarciso/Documents/coding-dojo/react-flask/server/.venv/lib/python3.12/site-packages/flask_jwt_extended/view_decorators.py"</cite
+                >, line <em class="line">170</em>, in
+                <code class="function">decorator</code>
+              </h4>
+              <div class="source library">
+                <pre
+                  class="line before"><span class="ws">        </span>@wraps(fn)</pre>
+                <pre
+                  class="line before"><span class="ws">        </span>def decorator(*args, **kwargs):</pre>
+                <pre
+                  class="line before"><span class="ws">            </span>verify_jwt_in_request(</pre>
+                <pre
+                  class="line before"><span class="ws">                </span>optional, fresh, refresh, locations, verify_type, skip_revocation_check</pre>
+                <pre
+                  class="line before"><span class="ws">            </span>)</pre>
+                <pre
+                  class="line current"><span class="ws">            </span>return current_app.ensure_sync(fn)(*args, **kwargs)
+<span class="ws">            </span>       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
+                <pre class="line after"><span class="ws"></span> </pre>
+                <pre
+                  class="line after"><span class="ws">        </span>return decorator</pre>
+                <pre class="line after"><span class="ws"></span> </pre>
+                <pre
+                  class="line after"><span class="ws">    </span>return wrapper</pre>
+                <pre class="line after"><span class="ws"></span> </pre>
+              </div>
+            </div>
+          </li>
+
+          <li>
+            <div class="frame" id="frame-4384808608">
               <h4>
                 File
                 <cite class="filename"
                   >"/Users/instructornarciso/Documents/coding-dojo/react-flask/server/flask_app/controllers/auth.py"</cite
-                >, line <em class="line">66</em>, in
-                <code class="function">login</code>
+                >, line <em class="line">73</em>, in
+                <code class="function">logout</code>
               </h4>
               <div class="source">
-                <pre
-                  class="line before"><span class="ws">        </span>response = make_response(jsonify({&#34;message&#34;: &#34;Invalid credentials.&#34;}))</pre>
-                <pre
-                  class="line before"><span class="ws">        </span>response.headers[&#34;Content-Type&#34;] = &#34;application/json&#34;</pre>
-                <pre
-                  class="line before"><span class="ws">        </span>response.status_code = 400</pre>
-                <pre
-                  class="line before"><span class="ws">        </span>return response</pre>
+                <pre class="line before"><span class="ws"></span> </pre>
                 <pre class="line before"><span class="ws"></span> </pre>
                 <pre
-                  class="line current"><span class="ws">    </span>if not bcrypt.check_password_hash(user.password, data[&#34;password&#34;]):
-<span class="ws">    </span>                                  ^^^^^^^^^^^^^</pre>
+                  class="line before"><span class="ws"></span>@auth.get(&#34;/api/auth/logout&#34;)</pre>
                 <pre
-                  class="line after"><span class="ws">        </span>response = make_response(jsonify({&#34;message&#34;: &#34;Invalid credentials.&#34;}))</pre>
+                  class="line before"><span class="ws"></span>@jwt_required()</pre>
                 <pre
-                  class="line after"><span class="ws">        </span>response.headers[&#34;Content-Type&#34;] = &#34;application/json&#34;</pre>
+                  class="line before"><span class="ws"></span>def logout():</pre>
                 <pre
-                  class="line after"><span class="ws">        </span>response.status_code = 400</pre>
+                  class="line current"><span class="ws">    </span>User.add_to_blocklist(get_jwt())[&#34;jti&#34;]
+<span class="ws">    </span>^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^</pre>
                 <pre
-                  class="line after"><span class="ws">        </span>return response</pre>
-                <pre class="line after"><span class="ws"></span> </pre>
+                  class="line after"><span class="ws">    </span>return make_json_response({&#34;msg&#34;: &#34;Successfully logged out&#34;}, 200)</pre>
               </div>
             </div>
           </li>
         </ul>
 
         <blockquote>
-          AttributeError: &#39;dict&#39; object has no attribute
-          &#39;password&#39;
+          TypeError: &#39;NoneType&#39; object is not subscriptable
         </blockquote>
       </div>
 
@@ -305,10 +329,12 @@ Traceback (most recent call last):
   File &#34;/Users/instructornarciso/Documents/coding-dojo/react-flask/server/.venv/lib/python3.12/site-packages/flask/app.py&#34;, line 865, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File &#34;/Users/instructornarciso/Documents/coding-dojo/react-flask/server/flask_app/controllers/auth.py&#34;, line 66, in login
-    if not bcrypt.check_password_hash(user.password, data[&#34;password&#34;]):
-                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AttributeError: &#39;dict&#39; object has no attribute &#39;password&#39;
+  File &#34;/Users/instructornarciso/Documents/coding-dojo/react-flask/server/.venv/lib/python3.12/site-packages/flask_jwt_extended/view_decorators.py&#34;, line 170, in decorator
+    return current_app.ensure_sync(fn)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File &#34;/Users/instructornarciso/Documents/coding-dojo/react-flask/server/flask_app/controllers/auth.py&#34;, line 73, in logout
+    User.add_to_blocklist(get_jwt())[&#34;jti&#34;]
+TypeError: &#39;NoneType&#39; object is not subscriptable
 </textarea
         >
       </div>
@@ -369,10 +395,12 @@ Traceback (most recent call last):
   File "/Users/instructornarciso/Documents/coding-dojo/react-flask/server/.venv/lib/python3.12/site-packages/flask/app.py", line 865, in dispatch_request
     return self.ensure_sync(self.view_functions[rule.endpoint])(**view_args)  # type: ignore[no-any-return]
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/Users/instructornarciso/Documents/coding-dojo/react-flask/server/flask_app/controllers/auth.py", line 66, in login
-    if not bcrypt.check_password_hash(user.password, data["password"]):
-                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AttributeError: 'dict' object has no attribute 'password'
+  File "/Users/instructornarciso/Documents/coding-dojo/react-flask/server/.venv/lib/python3.12/site-packages/flask_jwt_extended/view_decorators.py", line 170, in decorator
+    return current_app.ensure_sync(fn)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/instructornarciso/Documents/coding-dojo/react-flask/server/flask_app/controllers/auth.py", line 73, in logout
+    User.add_to_blocklist(get_jwt())["jti"]
+TypeError: 'NoneType' object is not subscriptable
 
 
 -->
